@@ -1,10 +1,19 @@
+"""Drawing module for visualizing hand landmarks and connections.
+
+This module handles the visualization of detected hand landmarks, connections
+between joints, FPS counter, and hand labels (left/right) on the video frame.
+"""
+
 from settings import *
 from settings import CameraConfig as cam
 from common import detection_result, detection_timestamp
 
+# Variables for FPS calculation
 last_time = time.time()
 fps = 0
 
+# Hand skeleton connections: tuples of (start_landmark_idx, end_landmark_idx)
+# Defines which landmarks should be connected to form the hand structure
 HAND_CONNECTIONS = frozenset([
     # Thumb
     (0,1), (1,2), (2,3), (3,4),
@@ -24,9 +33,25 @@ HAND_CONNECTIONS = frozenset([
 
 
 def draw_landmarks_on_image(image, detection_result):
+    """Draw hand landmarks, connections, and information overlays on the image.
+    
+    Args:
+        image: numpy array representing the video frame (BGR format)
+        detection_result: HandLandmarkerResult containing detected hand landmarks
+    
+    Returns:
+        numpy array: The image with drawn landmarks and information overlays
+    
+    Features:
+        - Draws 21 landmarks per hand as colored circles
+        - Connects landmarks according to hand anatomy
+        - Displays FPS counter
+        - Shows number of detected hands
+        - Labels each hand as Left/Right with confidence score
+    """
     global last_time, fps
     
-    # Calcular FPS
+    # Calculate FPS
     current_time = time.time()
     fps = 1 / (current_time - last_time) if (current_time - last_time) > 0 else 0
     last_time = current_time

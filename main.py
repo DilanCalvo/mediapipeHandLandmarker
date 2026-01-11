@@ -1,18 +1,35 @@
+"""Main module for real-time hand detection and tracking using MediaPipe.
+
+This module initializes the camera, sets up the hand detector, and runs the main
+detection loop with live video streaming.
+"""
+
 from settings import *
 from settings import BaseSettings as bs
 from settings import CameraConfig as cam
 from settings import HandDetectorConfig as hdc
 from common import detection_result, detection_timestamp
-from drawer import draw_landmarks_on_image
+from drawing import draw_landmarks_on_image
 
 def process_result(result, output_image, timestamp_ms):
+    """Callback function to process hand detection results.
     
+    Args:
+        result: HandLandmarkerResult containing detected hand landmarks
+        output_image: The processed output image (unused)
+        timestamp_ms: Timestamp in milliseconds of the detection
+    """
     global detection_result ,detection_timestamp
     detection_result = result
     detection_timestamp = timestamp_ms
 
 
 def main():
+    """Main function to run the hand tracking application.
+    
+    Initializes the camera, configures the hand detector, and runs the main loop
+    for real-time hand detection and visualization. Exits on 'q' or ESC key press.
+    """
     global detection_result
     
     print('Starting Camera...')
